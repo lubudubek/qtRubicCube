@@ -58,7 +58,8 @@ MainWidget::MainWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     geometries(0),
     texture(0),
-    angularSpeed(0)
+    angularSpeed(0),
+    indexBuf(QOpenGLBuffer::IndexBuffer)
 {
 }
 
@@ -67,6 +68,9 @@ MainWidget::~MainWidget()
     // Make sure the context is current when deleting the texture
     // and the buffers.
     makeCurrent();
+    arrayBuf.destroy();
+    indexBuf.destroy();
+
     delete texture;
     delete geometries;
     doneCurrent();
@@ -135,7 +139,10 @@ void MainWidget::initializeGL()
     glEnable(GL_CULL_FACE);
 //! [2]
 
-    geometries = new GeometryEngine;
+    arrayBuf.create();
+    indexBuf.create();
+
+    geometries = new GeometryEngine(arrayBuf, indexBuf);
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
@@ -214,7 +221,9 @@ void MainWidget::paintGL()
     program.setUniformValue("texture", 0);
 
     // Draw cube geometry
-    geometries->drawCubeGeometry(&program);
+    //geometries->drawCubeGeometry(&program);
+    arrayBuf.bind();
+    indexBuf.bind();
 
     // Offset for position
     quintptr offset = 0;

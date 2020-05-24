@@ -10,7 +10,9 @@ SOURCES += main.cpp \
     cubic.cpp \
     game.cpp \
     indeciesbuilder.cpp \
+    mainwindow.cpp \
     positions.cpp \
+    startup.cpp \
     vertices.cpp \
     verticiesdata.cpp
 
@@ -27,7 +29,9 @@ HEADERS += \
     indeciesbuilder.h \
     mainwidget.h \
     geometryengine.h \
+    mainwindow.h \
     positions.h \
+    startup.h \
     vertices.h \
     verticiesdata.h
 
@@ -38,3 +42,6 @@ RESOURCES += \
 # install
 #target.path = $$[QT_INSTALL_EXAMPLES]/opengl/cube
 #INSTALLS += target
+
+FORMS += \
+    mainwindow.ui

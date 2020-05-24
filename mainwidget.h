@@ -100,6 +100,9 @@ private:
     qreal angularSpeed;
     QQuaternion rotation;
 
+    QOpenGLBuffer arrayBuf;
+    QOpenGLBuffer indexBuf;
+
     Game m_game;
 };
 

@@ -56,14 +56,15 @@
 
 
 //! [0]
-GeometryEngine::GeometryEngine()
-    : indexBuf(QOpenGLBuffer::IndexBuffer)
+GeometryEngine::GeometryEngine(QOpenGLBuffer& p_arrayBuf,
+                               QOpenGLBuffer& p_indexBuf)
+    : arrayBuf(p_arrayBuf),
+      indexBuf(p_indexBuf)
+
 {
     initializeOpenGLFunctions();
 
     // Generate 2 VBOs
-    arrayBuf.create();
-    indexBuf.create();
 
     // Initializes cube geometry and transfers it to VBOs
     initCubeGeometry();
@@ -71,8 +72,6 @@ GeometryEngine::GeometryEngine()
 
 GeometryEngine::~GeometryEngine()
 {
-    arrayBuf.destroy();
-    indexBuf.destroy();
 }
 //! [0]
 
@@ -152,8 +151,7 @@ void GeometryEngine::initCubeGeometry()
 void GeometryEngine::drawCubeGeometry(QOpenGLShaderProgram *program)
 {
     // Tell OpenGL which VBOs to use
-    arrayBuf.bind();
-    indexBuf.bind();
+
 
 
 }

@@ -64,16 +64,18 @@ struct VertexData
 class GeometryEngine : protected QOpenGLFunctions
 {
 public:
-    GeometryEngine();
+    GeometryEngine(QOpenGLBuffer& p_arrayBuf,
+                   QOpenGLBuffer& p_indexBuf);
     virtual ~GeometryEngine();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
 
-private:
+public slots:
     void initCubeGeometry();
 
-    QOpenGLBuffer arrayBuf;
-    QOpenGLBuffer indexBuf;
+private:
+    QOpenGLBuffer& arrayBuf;
+    QOpenGLBuffer& indexBuf;
 };
 
 #endif // GEOMETRYENGINE_H
