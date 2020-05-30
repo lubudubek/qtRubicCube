@@ -56,18 +56,14 @@
 
 
 //! [0]
-GeometryEngine::GeometryEngine(QOpenGLBuffer& p_arrayBuf,
-                               QOpenGLBuffer& p_indexBuf)
-    : arrayBuf(p_arrayBuf),
-      indexBuf(p_indexBuf)
-
+GeometryEngine::GeometryEngine()
 {
-    initializeOpenGLFunctions();
+    //initializeOpenGLFunctions();
 
     // Generate 2 VBOs
 
     // Initializes cube geometry and transfers it to VBOs
-    initCubeGeometry();
+    //initCubeGeometry();
 }
 
 GeometryEngine::~GeometryEngine()
@@ -75,7 +71,8 @@ GeometryEngine::~GeometryEngine()
 }
 //! [0]
 
-void GeometryEngine::initCubeGeometry()
+void GeometryEngine::initCubeGeometry(QOpenGLBuffer& arrayBuf,
+                                      QOpenGLBuffer& indexBuf)
 {
     // For cube we would need only 8 vertices but we have to
     // duplicate vertex for each face because texture coordinate
@@ -148,7 +145,7 @@ void GeometryEngine::initCubeGeometry()
 }
 
 //! [2]
-void GeometryEngine::drawCubeGeometry(QOpenGLShaderProgram *program)
+void GeometryEngine::drawCubeGeometry()
 {
     // Tell OpenGL which VBOs to use
 

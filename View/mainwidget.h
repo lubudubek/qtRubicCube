@@ -48,32 +48,66 @@
 **
 ****************************************************************************/
 
-#ifndef GEOMETRYENGINE_H
-#define GEOMETRYENGINE_H
+#ifndef MAINWIDGET_H
+#define MAINWIDGET_H
 
+#include "geometryengine.h"
+
+#include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <QMatrix4x4>
+#include <QQuaternion>
+#include <QVector2D>
+#include <QBasicTimer>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLBuffer>
+#include <QOpenGLTexture>
 
-struct VertexData
-{
-    QVector3D position;
-    QVector2D texCoord;
-};
+#include <Model/game.h>
 
-class GeometryEngine : public QObject, protected QOpenGLFunctions
+class GeometryEngine;
+
+class MainWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
+
 public:
-    GeometryEngine();
-    virtual ~GeometryEngine();
+    explicit MainWidget(QWidget *parent = 0);
+    ~MainWidget();
 
-    void drawCubeGeometry();
+protected:
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void timerEvent(QTimerEvent *e) override;
 
-public slots:
-    void initCubeGeometry(QOpenGLBuffer&,
-                          QOpenGLBuffer&);
+    void initializeGL() override;
+    void resizeGL(int w, int h) override;
+    void paintGL() override;
 
+    void initShaders();
+    void initTextures();
+
+signals:
+    void openGlInitialized(QOpenGLBuffer&,
+                           QOpenGLBuffer&);
+
+private:
+    QBasicTimer timer;
+    QOpenGLShaderProgram program;
+    GeometryEngine *geometries;
+
+    QOpenGLTexture *texture;
+
+    QMatrix4x4 projection;
+
+    QVector2D mousePressPosition;
+    QVector3D rotationAxis;
+    qreal angularSpeed;
+    QQuaternion rotation;
+
+    QOpenGLBuffer arrayBuf;
+    QOpenGLBuffer indexBuf;
+
+    Game m_game;
 };
 
-#endif // GEOMETRYENGINE_H
+#endif // MAINWIDGET_H

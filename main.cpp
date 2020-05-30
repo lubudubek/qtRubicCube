@@ -53,10 +53,12 @@
 #include <QSurfaceFormat>
 
 #ifndef QT_NO_OPENGL
-#include "mainwidget.h"
-#include "mainwindow.h"
+#include "View/mainwidget.h"
+#include "View/mainwindow.h"
 #include "geometryengine.h"
 #endif
+
+#include "startup.h"
 
 int main(int argc, char *argv[])
 {
@@ -68,14 +70,16 @@ int main(int argc, char *argv[])
 
     app.setApplicationName("cube");
     app.setApplicationVersion("0.1");
-#ifndef QT_NO_OPENGL
-    //GeometryEngine engine;
 
-    MainWindow widget;
-    widget.show();
-#else
-    QLabel note("OpenGL Support required");
-    note.show();
-#endif
+    Startup startup;
+    startup.show();
+
+//#ifndef QT_NO_OPENGL
+//    MainWindow widget;
+//    widget.show();
+//#else
+//    QLabel note("OpenGL Support required");
+//    note.show();
+//#endif
     return app.exec();
 }

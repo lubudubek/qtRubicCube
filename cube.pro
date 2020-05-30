@@ -4,35 +4,35 @@ TARGET = cube
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    camera.cpp \
-    cube.cpp \
-    cubefactory.cpp \
-    cubic.cpp \
-    game.cpp \
-    indeciesbuilder.cpp \
-    mainwindow.cpp \
-    positions.cpp \
+    MgrView/mgrview.cpp \
+    Model/camera.cpp \
+    Model/cube.cpp \
+    Model/cubefactory.cpp \
+    Model/cubic.cpp \
+    Model/game.cpp \
+    Model/indeciesbuilder.cpp \
+    Model/positions.cpp \
+    Model/vertices.cpp \
+    View/mainwidget.cpp \
+    View/mainwindow.cpp \
     startup.cpp \
-    vertices.cpp \
-    verticiesdata.cpp
-
-SOURCES += \
-    mainwidget.cpp \
+    verticiesdata.cpp \
     geometryengine.cpp
 
 HEADERS += \
-    camera.h \
-    cube.h \
-    cubefactory.h \
-    cubic.h \
-    game.h \
-    indeciesbuilder.h \
-    mainwidget.h \
+    MgrView/mgrview.h \
+    Model/camera.h \
+    Model/cube.h \
+    Model/cubefactory.h \
+    Model/cubic.h \
+    Model/game.h \
+    Model/indeciesbuilder.h \
+    Model/positions.h \
+    Model/vertices.h \
+    View/mainwidget.h \
+    View/mainwindow.h \
     geometryengine.h \
-    mainwindow.h \
-    positions.h \
     startup.h \
-    vertices.h \
     verticiesdata.h
 
 RESOURCES += \
@@ -44,4 +44,4 @@ RESOURCES += \
 #INSTALLS += target
 
 FORMS += \
-    mainwindow.ui
+    View/mainwindow.ui
