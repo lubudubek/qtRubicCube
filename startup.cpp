@@ -9,7 +9,7 @@ Startup::Startup() :
   m_mainWidget(*new MainWidget()),
   m_mainWindow(*new MainWindow(nullptr, m_mainWidget)),
   m_geometryEngine(*new GeometryEngine()),
-  m_mgrView(*new MgrView())
+  m_mgrView(*new MgrView(nullptr, m_mainWidget, m_mainWindow))
 {
     connect(&m_mainWidget, &MainWidget::openGlInitialized,
             &m_geometryEngine, &GeometryEngine::initCubeGeometry);

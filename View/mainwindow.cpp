@@ -15,3 +15,13 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_xRotation_sliderMoved(int position)
+{
+    emit xRotationChanged(position);
+}
+
+void MainWindow::on_yRotation_valueChanged(int value)
+{
+    emit yRotationChanged(value);
+}

@@ -59,6 +59,7 @@ struct VertexData
 {
     QVector3D position;
     QVector2D texCoord;
+    float cubicNumber;
 };
 
 class GeometryEngine : public QObject, protected QOpenGLFunctions

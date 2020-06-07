@@ -89,6 +89,9 @@ protected:
 signals:
     void openGlInitialized(QOpenGLBuffer&,
                            QOpenGLBuffer&);
+public slots:
+    void onXRotationChanged(int position);\
+    void onYRotationChanged(int position);
 
 private:
     QBasicTimer timer;
@@ -108,6 +111,8 @@ private:
     QOpenGLBuffer indexBuf;
 
     Game m_game;
+    float m_angleX{0.0};
+    float m_angleY{0.0};
 };
 
 #endif // MAINWIDGET_H
