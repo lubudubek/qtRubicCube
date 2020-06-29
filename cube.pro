@@ -16,11 +16,11 @@ SOURCES += main.cpp \
     View/mainwidget.cpp \
     View/mainwindow.cpp \
     startup.cpp \
-    verticiesdata.cpp \
-    geometryengine.cpp
+    verticiesdata.cpp
 
 HEADERS += \
     MgrView/mgrview.h \
+    Model/VertexData.h \
     Model/camera.h \
     Model/cube.h \
     Model/cubefactory.h \
@@ -31,7 +31,6 @@ HEADERS += \
     Model/vertices.h \
     View/mainwidget.h \
     View/mainwindow.h \
-    geometryengine.h \
     startup.h \
     verticiesdata.h
 

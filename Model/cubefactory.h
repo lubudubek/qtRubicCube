@@ -5,6 +5,7 @@
 
 class Cube;
 class Cubic;
+class VertexData;
 
 class CubeFactory
 {
@@ -13,6 +14,8 @@ public:
     std::unique_ptr<Cube> createCube();
 private:
     std::shared_ptr<Cubic> makeCubic();
+    std::array<VertexData, 24>&& createDefaultCubicVerts();
+    std::array<VertexData, 24>&& createInsideVerts();
 };
 
 #endif // CUBEFACTORY_H

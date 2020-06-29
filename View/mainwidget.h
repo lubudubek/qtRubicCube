@@ -51,8 +51,6 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include "geometryengine.h"
-
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QMatrix4x4>
@@ -64,14 +62,14 @@
 
 #include <Model/game.h>
 
-class GeometryEngine;
+class Camera;
 
 class MainWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
 public:
-    explicit MainWidget(QWidget *parent = 0);
+    explicit MainWidget(QWidget *parent, Camera& camera);
     ~MainWidget();
 
 protected:
@@ -89,14 +87,14 @@ protected:
 signals:
     void openGlInitialized(QOpenGLBuffer&,
                            QOpenGLBuffer&);
+    void updateCube(QOpenGLShaderProgram&);
+
 public slots:
-    void onXRotationChanged(int position);\
-    void onYRotationChanged(int position);
 
 private:
     QBasicTimer timer;
     QOpenGLShaderProgram program;
-    GeometryEngine *geometries;
+    Camera& m_camera;
 
     QOpenGLTexture *texture;
 
@@ -110,7 +108,6 @@ private:
     QOpenGLBuffer arrayBuf;
     QOpenGLBuffer indexBuf;
 
-    Game m_game;
     float m_angleX{0.0};
     float m_angleY{0.0};
 };

@@ -51,12 +51,15 @@
 #include "mainwidget.h"
 #include "qdebug.h"
 #include <QMouseEvent>
+#include "Model/camera.h"
+#include "Model/VertexData.h"
 
 #include <math.h>
 
-MainWidget::MainWidget(QWidget *parent) :
+MainWidget::MainWidget(QWidget *parent,
+                       Camera& camera) :
     QOpenGLWidget(parent),
-    geometries(nullptr),
+    m_camera(camera),
     texture(nullptr),
     angularSpeed(0),
     indexBuf(QOpenGLBuffer::IndexBuffer)
@@ -72,7 +75,6 @@ MainWidget::~MainWidget()
     indexBuf.destroy();
 
     delete texture;
-    delete geometries;
     doneCurrent();
 }
 
@@ -86,56 +88,18 @@ void MainWidget::mousePressEvent(QMouseEvent *e)
 void MainWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     // Mouse release position - mouse press position
-//    QVector2D diff = QVector2D(e->localPos()) - mousePressPosition;
-
-//    // Rotation axis is perpendicular to the mouse position difference
-//    // vector
-//    QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-
-//    // Accelerate angular speed relative to the length of the mouse sweep
-//    qreal acc = diff.length() / 100.0;
-
-//    // Calculate new rotation axis as weighted sum
-//    rotationAxis = (rotationAxis * angularSpeed + n * acc).normalized();
-
-//    // Increase angular speed
-//    angularSpeed += acc;
+    //    QVector2D diff = QVector2D(e->localPos()) - mousePressPosition;
 }
 //! [0]
 
 //! [1]
 void MainWidget::timerEvent(QTimerEvent *)
 {
-//    // Decrease angular speed (friction)
-//    angularSpeed *= 0.99;
-
-//    // Stop rotation when speed goes below threshold
-//    if (angularSpeed < 0.01) {
-//        angularSpeed = 0.0;
-//    } else {
-//        // Update rotation
-//        rotation = QQuaternion::fromAxisAndAngle(rotationAxis, angularSpeed) * rotation;
-
-//        // Request an update
-//        update();
-//    }
-
+    emit updateCube(program);
+    //emit event to update cube
+    update();
 }
 //! [1]
-
-void MainWidget::onXRotationChanged(int position)
-{
-    qDebug() << "mainWidget x rotation changed: " << position;
-    m_angleX = position;
-    update();
-}
-
-void MainWidget::onYRotationChanged(int position)
-{
-    qDebug() << "mainWidget y rotation changed: " << position;
-    m_angleY = position;
-    update();
-}
 
 void MainWidget::initializeGL()
 {
@@ -158,7 +122,6 @@ void MainWidget::initializeGL()
     indexBuf.create();
 
     emit openGlInitialized(arrayBuf, indexBuf);
-    //geometries = new GeometryEngine(arrayBuf, indexBuf);
 
     // Use QBasicTimer because its faster than QTimer
     timer.start(12, this);
@@ -202,17 +165,8 @@ void MainWidget::initTextures()
 //! [5]
 void MainWidget::resizeGL(int w, int h)
 {
-    // Calculate aspect ratio
-    qreal aspect = qreal(w) / qreal(h ? h : 1);
-
-    // Set near plane to 3.0, far plane to 7.0, field of view 45 degrees
-    const qreal zNear = 3.0, zFar = 7.0, fov = 45.0;
-
-    // Reset projection
-    projection.setToIdentity();
-
-    // Set perspective projection
-    projection.perspective(fov, aspect, zNear, zFar);
+    m_camera.setWindowSize(w,h);
+    m_camera.recalculateMatrix();
 }
 //! [5]
 
@@ -220,38 +174,18 @@ void MainWidget::paintGL()
 {
     // Clear color and depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     texture->bind();
 
-    const QVector3D& rotationXAxis = {1.0, 0.0, 0.0};
-    const QVector3D& rotationYAxis = {0.0, 1.0, 0.0};
-
-
-
-    qDebug() << "angle set";
-    rotation = QQuaternion::fromAxisAndAngle(rotationXAxis, m_angleX);
-    rotation *= QQuaternion::fromAxisAndAngle(rotationYAxis, m_angleY);
-//! [6]
-    // Calculate model view transformation
-    QMatrix4x4 matrix;
-    matrix.translate(0.0, 0.0, -5.0);
-    matrix.rotate(rotation);
-
-//    QMatrix4x4 cubicMat[24];
-//    for (int i =0; i < 24; i++)
-//    {
-//        cubicMat[i]= QMatrix4x4();
-//    }
-    // Set modelview-projection matrix
-    program.setUniformValue("mvp_matrix", projection * matrix);
-//    program.setUniformValue("cubic_matrix", *cubicMat);
+    program.setUniformValue("mvp_matrix", m_camera.getCurrentMatrix());
 //! [6]
 
     // Use texture unit 0 which contains cube.png
-    program.setUniformValue("texture", 0);
+    //program.setUniformValue("texture", 0);
 
-    // Draw cube geometry
-    //geometries->drawCubeGeometry(&program);
     arrayBuf.bind();
     indexBuf.bind();
 
@@ -267,11 +201,11 @@ void MainWidget::paintGL()
     offset += sizeof(QVector3D);
 
     // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
-    int texcoordLocation = program.attributeLocation("a_texcoord");
+    int texcoordLocation = program.attributeLocation("a_color");
     program.enableAttributeArray(texcoordLocation);
-    program.setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(VertexData));
+    program.setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 4, sizeof(VertexData));
 
-    offset += sizeof(QVector2D);
+    offset += sizeof(QVector4D);
 
     int cubicNumber = program.attributeLocation("a_cubicNumber");
     program.enableAttributeArray(cubicNumber);
@@ -279,4 +213,6 @@ void MainWidget::paintGL()
 
     // Draw cube geometry using indices from VBO 1
     glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
+    //glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
+
 }

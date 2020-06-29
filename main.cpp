@@ -55,7 +55,6 @@
 #ifndef QT_NO_OPENGL
 #include "View/mainwidget.h"
 #include "View/mainwindow.h"
-#include "geometryengine.h"
 #endif
 
 #include "startup.h"
